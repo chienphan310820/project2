@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>PROJECT2</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!-- <script src="./plugin/jquery.simplePagination.js"></script>
+    <link rel="stylesheet" href="./plugin/simplePagination.css"> -->
+    <link rel="stylesheet" href="/css/signin.css">
+    <link rel="stylesheet" href="/javascripts/signin.js">
+    <link rel="stylesheet" href="/less/signin.less">
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="container">
+            <h1>Welcome to Blog CP</h1>
+
+            <form class="form">
+                <input type="email" id="email" placeholder="Email">
+                <input type="password" id="password" placeholder="Password">
+                <span id="emailValidate" style="display: none; color: red;"> </span>
+                <span id="passwordValidate" style="display: none; color: red;"> </span>
+                <span id="active" style="display: none; color: red;"> </span>
+                <button id="login-button" type="button">Sign In</button>
+                <div class="create-account"><span class="txt1">Create an account?</span>
+                    <a href="/signup" class="txt2 hov1">Sign up</a></div>
+                <a href="/forgotpassword" class="txt2 hov1">Forgot Password?</a>
+        </div>
+        <!-- <button type="submit" id="login-button">SignUp</button> -->
+        </form>
+    </div>
+    <ul class="bg-bubbles">
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+    </div>
+</body>
+<script>
+    $("#login-button").click(function () {
+        var $isEmail = false;
+        var $isPassword = false
+        var $email = $("#email").val();
+        var $password = $("#password").val();
+        if ($email == "") {
+            $("#emailValidate").html("");
+            $("#emailValidate").css("display", "block").
+                $isEmail = false;
+        } else if ($email.indexOf("@") <= 0) {
+            $("#emailValidate").html("");
+            $("#emailValidate").css("display", "block").html("Email khong dung dinh dang");
+            $isEmail = false;
+        } else {
+            $("#emailValidate").css("display", "none").html("");
+            $isEmail = true;
+        }
+        if ($password.length < 6 && $password.length > 0) {
+            $("#passwordValidate").html("");
+            $("#passwordValidate").css("display", "block").html("mat khau phai lon hon 6 ky tu");
+            $isPassword = false
+        } else if ($password == "") {
+            $("#passwordValidate").html("");
+            $("#passwordValidate").css("display", "block").html("tk,mk ko duoc de trong");
+            $isPassword = false
+        } else {
+            $("#passwordValidate").css("display", "none").html("");
+            $isPassword = true;
+        }
+
+        if ($isEmail && $isPassword) {
+            $.ajax({
+                url: "/api/signin",
+                method: "post",
+                data: {
+                    email: $('#email').val(),
+                    password: $('#password').val()
+                },
+            }).then(function (data) {
+                console.log(data);
+                // alert(data.message)
+                if (data.error === false) {
+                //    setCookie("token", data.token, 1)
+                //    setCookie("email", data.email, 1)
+                    alert(data.message)
+                    window.location.href = "/";
+                    return;
+                }
+                if (data.error === true) {
+                    alert(data.message)
+                    return;
+                }
+            }).catch(function (err) {
+
+            })
+        }
+    });
+    function setCookie(cname, cvalue, exdays) {
+        var d = new Date();
+        d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+        var expires = "expires=" + d.toUTCString();
+        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    };
+
+
+
+
+
+
+    // function getCookie(cname) {
+    //     var name = cname + "=";
+    //     var decodedCookie = decodeURIComponent(document.cookie);
+    //     var ca = decodedCookie.split(';');
+    //     for (var i = 0; i < ca.length; i++) {
+    //         var c = ca[i];
+    //         while (c.charAt(0) == '') {
+    //             c = c.substring(1);
+    //         }
+    //         if (c.indexOf(name) == 0) {
+    //             return c.substring(name.length, c.length);
+    //         }
+    //     }
+    //     return "";
+    // }
+    // var token = getCookie("token");
+
+    // // console.log(token)
+
+</script>
+
+</html>
