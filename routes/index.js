@@ -18,6 +18,15 @@ router.get('/signup', function (req, res, next) {
 router.get('/admin', function (req, res, next) {
   res.sendFile(path.join(__dirname, "../views/loginAdmin.html"))
 });
+router.get('/menu', function (req, res, next) {
+  res.sendFile(path.join(__dirname, "../views/menu.html"))
+});
+router.get('/experience', function (req, res, next) {
+  res.sendFile(path.join(__dirname, "../views/experience.html"))
+});
+router.get('/add', function (req, res, next) {
+  res.sendFile(path.join(__dirname, "../views/add.html"))
+});
 
 router.use(express.urlencoded());
 

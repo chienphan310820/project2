@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Menu</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="./plugin/jquery.simplePagination.js"></script>
+    <link rel="stylesheet" href="./plugin/simplePagination.css">
+    <link rel="stylesheet" href="/css/menu.css">
+
+    <style>
+        /* .inputEdit {
+            display: none
+        } */
+
+        .off {
+            display: none
+        }
+    </style>
+</head>
+
+<body>
+     <!-- navbar -->
+     <div class="container-fluid p-0">
+        <nav class="navbar navbar-expand-lg">
+            <a class="navbar-brand" href="https://www.facebook.com/chien3108">
+                <img src="https://forum.vietdesigner.net/data/images/designer.png" alt="FPTU Business Club"
+                    width="70" height="70"></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fas fa-align-right text-light"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="mr-auto"></div>
+                <ul class="navbar-nav">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/">HOME
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/menu">Menu</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/experience">Experience</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <div class="dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                News
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="#">Tin dạo</a>
+                                <a class="dropdown-item" href="#">Chuyện Phiếm</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="/signin" id="loginSend">Login</a>
+                                <a class="dropdown-item" href="/signin" id="logoutSend">Log Out</a>
+                                <a class="dropdown-item" id="usernameLogin" style="display: none;"></a>
+                            </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Blog-ChiếnPhan</a>
+                    </li>
+                </ul>
+                <form class="form-inline my-2 my-lg-0 ">
+                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                    <i class="fas fa-search"></i>
+                </form>
+            </div>
+        </nav>
+    </div>
+    <!-- navbar -->
+
+    <div class="container">
+        <div class="row" id="content">
+        </div>
+        <div id="update"><a href="/add" class="btn btn-primary" id="edit">ADD</a></div>
+    </div>
+
+    <!-- pagination -->
+    <div class="panigition container" id="paging">
+        <ul class="pagination">
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</body>
+<script>
+
+    function getCard(value) {
+        $.ajax({
+            url: "/users/user?page=" + value,
+            method: "get"
+
+        }).then(function (data) {
+            $("#content").html('')
+            for (let x = 0; x < data.length; x++) {
+                var arr = data[x]
+                $("#content").append(`
+                    <div class="card container" style="width: 18rem;">
+                    <img class="card-img-top" src="${arr.avatar}" alt="Card image cap">
+                        <div class="card-body">
+                            <h5 class="card-title" id="text-${arr._id}">${arr.name}</h5> 
+                            <input type="text" class="off" id="inputEdit-${arr._id}" value="${arr.name}"/>
+                                <p class="card-text">Demo card the html.</p>
+                                <button type="button" class="btn btn-primary off" id="save-${arr._id}"   onclick = "btnSave('${arr._id}',${value})">Save</button>
+                                <button type="button" class="btn btn-primary" id="edit-${arr._id}"   onclick = "btnEdit('${arr._id}')">Edit</button>
+                            <button type="button" class="btn btn-danger"  onclick = "btndelete('${arr._id}', ${value} )">Delete</button>
+                        </div>
+                     </div>  
+                 `)
+            }
+        })
+    }
+
+    function taoNutPhanTrang() {
+        $.ajax({
+            url: "/users/user/count",
+            method: "get"
+        }).then(function (data) {
+            $('#paging').pagination({
+                items: data,
+                itemsOnPage: 3,
+                cssStyle: 'light-theme',
+                onPageClick: function (pageNum, event) {
+                    getCard(pageNum)
+                }
+            });
+        })
+    }
+
+
+
+    // edit
+    function btnEdit(IDedit) {
+        $("#text-" + IDedit).addClass("off");
+        $("#inputEdit-" + IDedit).removeClass("off");
+        $(`#save-${IDedit}`).removeClass("off");
+        $(`#edit-${IDedit}`).addClass("off");
+
+    };
+    function btnSave(IDedit, idPage) {
+        $("#text-" + IDedit).removeClass("off");
+        $("#inputEdit-" + IDedit).addClass("off");
+        $(`#save-${IDedit}`).addClass("off");
+        $(`#edit-${IDedit}`).removeClass("off");
+
+        $.ajax({
+            url: `/users/user/update/${IDedit}`,
+            type: "PUT",
+            dataType: "json",
+            data: {
+                name: $("#inputEdit-" + IDedit).val()
+            }
+        }).then(function (data) {
+            getCard(idPage)
+        })
+    };
+    // delete 
+    function btndelete(idNumber, idPage) {
+        $.ajax({
+            url: "/users/user/delete",
+            type: "DELETE",
+            data: { id: idNumber },
+            dataType: "json"
+        }).then(function (data) {
+            getCard(idPage)
+        })
+    };
+
+    getCard(1)
+    taoNutPhanTrang()
+
+
+
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+
+</html>

@@ -3,7 +3,7 @@ var router = express.Router();
 var jwt = require('jsonwebtoken')
 var bcrypt = require("bcrypt");
 var saltRounds = 10;
-var path = require("path");
+// var path = require("path");
 var sendMail = require('../config/sendMail')
 var UserModel = require('../models/UserModel')
 /* GET users listing. */
@@ -177,11 +177,13 @@ router.post('/admin', function (req, res, next) {
         }
     })
 })
-// router.get("/getUser",function(req,res,next){
-//     var token = req.cookies.token;
-//     var decodeUser= jwt.verify(token,"chienphan");
-//     res.json({
-//         email: decodeUser.email
-//     })
-// })
+
+// phân trang 
+
+//  tạo 1 api (/menu)
+// router.post("/menu")
+// 	UserModel.find().then(function(data){
+// 		var sumPage = parseInt(data.length/5);
+// 		res.json(sumPage);
+// 	})
 module.exports = router;
