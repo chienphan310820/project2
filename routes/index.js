@@ -7,7 +7,7 @@ var path = require("path")
 router.use('/views', express.static(path.join(__dirname, '/views')))
 // router.use('/public', express.static(path.join(__dirname, '/public  ')))
 router.get('/', function (req, res, next) {
-  res.sendFile(path.join(__dirname, "../views/home.html"))
+  res.sendFile(path.join(__dirname, "../views/index.html"))
 });
 router.get('/signin', function (req, res, next) {
   res.sendFile(path.join(__dirname, "../views/signin.html"))
