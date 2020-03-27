@@ -42,11 +42,13 @@ router.post('/signup', (req, res, next) => {
                         }, "chienphan", {
                             expiresIn: "1h"
                         })
-                        sendMail("phanchien625@gmail.com", "THƯ XÁC NHẬN", `LINK NÀY TỒN TẠI TRONG 5P, xác nhận tại<a href="${req.protocol + '://' + req.get('host')}/api/authEmail/${token}">ĐÂY</a>`)
+                        let to = req.body.email
+                        sendMail(to, "THƯ XÁC NHẬN", `LINK NÀY TỒN TẠI TRONG 5P, xác nhận tại<a href="${req.protocol + '://' + req.get('host')}/api/authEmail/${token}">ĐÂY</a>`)
                         return res.json({
                             error: false,
                             message: "dki tk thanh cong, vao mail de xac nhan active tk",
                             // token: token
+                            link: `${req.protocol + '://' + req.get('host')}/api/authEmail/${token}`
                         })
                     }
                 });
@@ -90,7 +92,7 @@ router.post('/signin', function (req, res, next) {
     UserModel.find({
         email: email,
     }).then(function (data) {
-        // console.log(data);
+        console.log(data);
         if (data.length == 0) {
             return res.json({
                 error: true,
@@ -116,9 +118,9 @@ router.post('/signin', function (req, res, next) {
                     res.cookie("email", data[0].email, {
                         maxAge: 24 * 1000 * 60 * 60
                     })
-                    res.cookie("token",token,{
-                
-                    })
+                    // res.cookie("token",token,{
+
+                    // })
                     return res.json({
                         error: false,
                         message: " Đăng nhập thành công!",
@@ -132,6 +134,13 @@ router.post('/signin', function (req, res, next) {
                     })
                 }
             });
+        }
+        else {
+            // res == true
+            return res.json({
+                error: true,
+                message: "tk chưa active, vào mail để active ngay"
+            })
         }
         // res.json("dn thanh cmn công")
         // console.log("đăng nhập thành công=============");
